@@ -239,4 +239,41 @@ class UserController extends Controller
                 ->with('error', 'Terjadi kesalahan saat membuat faktur.');
         }
     }
+
+    /**
+     * Display a specific invoice.
+     */
+    public function showInvoice($invoiceNumber)
+    {
+        $invoiceNumber = str_replace('-', '/', $invoiceNumber); // In case the route uses hyphens to avoid slash issues, but here we just pass it as parameter. Wait, if invoice number is INV/20260501/783, it has slashes! Slashes in URL route parameters will break unless handled.
+        // Actually, the route is /user/invoice/show/{invoiceNumber}. Slashes will break Laravel routes unless we use a catch-all route like `{invoiceNumber}` with `where('invoiceNumber', '.*')`.
+        // Let's check how the invoice_number is generated: `INV/20260501/783`
+        
+        $invoice = Invoice::where('invoice_number', $invoiceNumber)
+            ->where('user_id', Auth::id())
+            ->with('items.category')
+            ->firstOrFail();
+
+        // Convert invoice items to the 'cart' format expected by the view
+        $cart = [];
+        foreach ($invoice->items as $item) {
+            $cart[] = [
+                'name' => $item->name,
+                'category' => $item->category ? $item->category->name : 'Uncategorized',
+                'price' => $item->pivot->subtotal / $item->pivot->quantity,
+                'quantity' => $item->pivot->quantity,
+            ];
+        }
+
+        // Mock request object for the view
+        $request = new \Illuminate\Http\Request();
+        $request->merge([
+            'shipping_address' => $invoice->shipping_address,
+            'postal_code' => $invoice->postal_code,
+        ]);
+
+        $total = $invoice->total_price;
+
+        return view('user.invoice_print', compact('cart', 'invoiceNumber', 'total', 'request'));
+    }
 }

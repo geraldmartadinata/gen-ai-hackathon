@@ -222,6 +222,10 @@
                 message.style.display = 'none';
             });
         }, 3000);
+
+        function viewInvoice(invoiceNumber) {
+            window.location.href = '/user/invoice/show/' + invoiceNumber;
+        }
     </script>
 </body>
 </html>

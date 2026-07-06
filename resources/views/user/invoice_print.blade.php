@@ -73,8 +73,8 @@
         <button onclick="window.print()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
             <i class="fas fa-print mr-2"></i>Cetak Faktur
         </button>
-        <button onclick="window.location.href='/user'" class="ml-3 bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>Kembali ke Katalog
+        <button onclick="window.location.href='/user/history'" class="ml-3 bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>Kembali ke Riwayat
         </button>
     </div>
 
@@ -205,11 +205,6 @@
             setTimeout(function() {
                 window.print();
             }, 1000);
-        });
-        
-        // Redirect to catalog after printing
-        window.addEventListener('afterprint', function() {
-            window.location.href = '/user';
         });
     </script>
 </body>

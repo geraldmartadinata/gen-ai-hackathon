@@ -53,6 +53,7 @@ Route::middleware('user')->group(function () {
     Route::get('/user/invoice/create', [UserController::class, 'createInvoice'])->name('user.invoice.create');
     Route::post('/user/invoice/store', [UserController::class, 'storeInvoice'])->name('user.invoice.store');
     Route::get('/user/invoice', [UserController::class, 'createInvoice'])->name('user.invoice');
+    Route::get('/user/invoice/show/{invoiceNumber}', [UserController::class, 'showInvoice'])->where('invoiceNumber', '.*')->name('user.invoice.show');
 });
 
 // Common routes
